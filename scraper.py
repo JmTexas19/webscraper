@@ -42,4 +42,8 @@ while(completeURL != None):
     
     #FORMAT
     print("\n\n")
+    
+#Close Text File
+text_file.close()
+
 
