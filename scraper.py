@@ -15,6 +15,9 @@ scraper = cfscrape.create_scraper()
 text_file = open("Output.txt", "w", encoding='UTF-8')
 completeURL = 'https://novelplanet.com/Novel/To-Be-a-Power-in-the-Shadows/c1-5?id=332838'
 
+#Array for storing URL's
+URLArray = []
+
 while(completeURL != None):
     # this is the url that we've already determined is safe and legal to scrape from.
     page_link = completeURL
@@ -41,13 +44,16 @@ while(completeURL != None):
     for i in range(len(partURLArr)):
         if(i == len(partURLArr) - 1):
             partURL = partURLArr[i].get('href')
-    
-    completeURL = "https://novelplanet.com" + partURL
+            
+    #Add partURL to array for tracking
+    if(partURL in URLArray):
+        completeURL = None 
+    else:
+        URLArray.append(partURL)
+        completeURL = "https://novelplanet.com" + partURL    
     
     #FORMAT
     text_file.write("\n\n")
     
 #Close Text File
 text_file.close()
-
-
