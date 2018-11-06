@@ -37,10 +37,12 @@ while(completeURL != None):
         text_file.write(paragraphs[i].get_text())
 
     #Find link to next chapter
-    partURLArr = page_content.find_all('a')
-    print(partURLArr)
+    partURLArr = page_content.find_all('a', {'class' : 'button small'})
+    for i in range(len(partURLArr)):
+        if(i == len(partURLArr) - 1):
+            partURL = partURLArr[i].get('href')
     
-    completeURL = "https://novelplanet.com"
+    completeURL = "https://novelplanet.com" + partURL
     
     #FORMAT
     print("\n\n")
