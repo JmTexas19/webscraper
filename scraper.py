@@ -26,6 +26,11 @@ while(completeURL != None):
     page_content = BeautifulSoup(page_response.content, "html.parser")
     page_content.prettify    
     
+    #Get Chapter
+    chapter = page_content.find('h4').get_text()
+    text_file.write(chapter + "\n")
+    print("Writing " + chapter)
+    
     #Find and print all text with tag p
     paragraphs = page_content.find_all('p')
     for i in range(len(paragraphs)):
