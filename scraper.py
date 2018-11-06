@@ -45,7 +45,7 @@ while(completeURL != None):
     completeURL = "https://novelplanet.com" + partURL
     
     #FORMAT
-    print("\n\n")
+    text_file.write("\n\n")
     
 #Close Text File
 text_file.close()
