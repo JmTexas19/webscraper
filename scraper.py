@@ -38,6 +38,8 @@ while(completeURL != None):
     paragraphs = page_content.find_all('p')
     for i in range(len(paragraphs)):
         text_file.write(paragraphs[i].get_text())
+        text_file.write("\n\n")
+
 
     #Find link to next chapter
     partURLArr = page_content.find_all('a', {'class' : 'button small'})
