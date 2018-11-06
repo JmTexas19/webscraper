@@ -55,6 +55,7 @@ while(completeURL != None):
         completeURL = "https://novelplanet.com" + partURL    
     
     #FORMAT
+    text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
     text_file.write("\n\n")
     
 #Close Text File
