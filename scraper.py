@@ -12,8 +12,8 @@ import cfscrape
 scraper = cfscrape.create_scraper()  
 
 #URL and textfile
-text_file = open("Output.txt", "w", encoding='UTF-8')
-completeURL = 'https://novelplanet.com/Novel/To-Be-a-Power-in-the-Shadows/c1-5?id=332838'
+text_file = open("Output.html", "w", encoding='UTF-8')
+completeURL = 'https://boxnovel.com/novel/transcending-the-nine-heavens/chapter-989/'
 
 #Array for storing URL's
 URLArray = []
@@ -30,29 +30,46 @@ while(completeURL != None):
     page_content.prettify    
     
     #Get Chapter
-    chapter = page_content.find('h4').get_text()
-    text_file.write(chapter + "\n")
-    print("Writing " + chapter)
-    
-    #Find and print all text with tag p
-    paragraphs = page_content.find_all('p')
-    for i in range(len(paragraphs)):
-        text_file.write(paragraphs[i].get_text())
-        text_file.write("\n\n")
+    chapter = page_content.find('h2', {'class' : 'text-center'})
 
+    #In case header changes
+    if(chapter == None):
+        chapter = page_content.find('h3')
+
+    text_file.write('<h3>' + chapter.get_text() + '</h3>')
+    print("Writing " + chapter.get_text())
+    
+    #Get Article
+    article = page_content.find('div', {'class' : 'entry-content'})
+
+    #Find and print all text with tag p
+    paragraphs = article.find_all('p')
+    for i in range(len(paragraphs)):
+        text_file.write(str(paragraphs[i]))
 
     #Find link to next chapter
-    partURLArr = page_content.find_all('a', {'class' : 'button small'})
-    for i in range(len(partURLArr)):
-        if(i == len(partURLArr) - 1):
-            partURL = partURLArr[i].get('href')
+    nextURLHTML = page_content.find('a', {'class' : 'btn next_page'})
+    if(nextURLHTML != None):
+        nextURL = nextURLHTML.get('href')
+    else:
+        #No Chapters left... Break. :(
+        break
+
+    # Not Necessary unless multiple buttons.
+    #partURLArr = page_content.find_all('a', {'class' : 'btn next_page'})
+    #for i in range(len(partURLArr)):
+    #    if(i == len(partURLArr) - 1):
+    #        partURL = partURLArr[i].get('href')
             
     #Add partURL to array for tracking
-    if(partURL in URLArray):
+    if(nextURL in URLArray):
         completeURL = None 
     else:
-        URLArray.append(partURL)
-        completeURL = "https://novelplanet.com" + partURL    
+        URLArray.append(nextURL)
+        completeURL = nextURL
+
+        #If nextURL is only half of what you need.
+        # completeURL = "https://novelplanet.com" + nextURL    
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
