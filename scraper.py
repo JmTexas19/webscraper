@@ -14,7 +14,7 @@ scraper = cloudscraper.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://www.wuxiaworld.com/novel/the-second-coming-of-gluttony/scog-chapter-1'
+completeURL = 'https://boxnovel.com/novel/my-house-of-horrors/chapter-616/'
 
 #Array for storing URL's
 URLArray = []
@@ -31,13 +31,13 @@ while(completeURL != None):
     page_content.prettify    
 
     #ARTICLE
-    article = page_content.find('div', {'class' : 'section'})
+    article = page_content.find('div', {'class' : 'c-blog-post'})
     
     #HEADER
     #Get Block Header is in
-    caption = page_content.find('div', {'class' : 'caption clearfix'})
+    caption = page_content.find('li', {'class' : 'active'}).getText().strip()
     #Get Chapter
-    chapter = caption.find('h4', {'class' : ''})
+    chapter = "<h3>" + caption + "</h3?"
     text_file.write(str(chapter))
 
     #Get Chapter From URL
@@ -64,7 +64,7 @@ while(completeURL != None):
     
 
     # Not Necessary unless multiple buttons.
-    nextURLArr = page_content.find_all('a', {'class' : 'btn btn-link'})
+    nextURLArr = page_content.find_all('a', {'class' : 'btn next_page'})
     for i in range(len(nextURLArr)):
         if(i == len(nextURLArr) - 1):
             nextURL = nextURLArr[i].get('href')
@@ -77,7 +77,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://www.wuxiaworld.com" + nextURL    
+        #completeURL = "https://www.wuxiaworld.com" + nextURL    
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
