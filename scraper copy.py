@@ -7,13 +7,14 @@ Created on Mon Nov  5 20:37:33 2018
 # Here, we're just importing both Beautiful Soup and the Requests library
 from bs4 import BeautifulSoup
 import cfscrape
+import cloudscraper
 
 # returns a CloudflareScraper instance
-scraper = cfscrape.create_scraper()  
+scraper = cloudscraper.create_scraper() 
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://boxnovel.com/novel/transcending-the-nine-heavens/chapter-989/'
+completeURL = 'https://www.wuxiaworld.com/novel/the-novels-extra/tne-chapter-0'
 
 #Array for storing URL's
 URLArray = []
@@ -28,19 +29,25 @@ while(completeURL != None):
     #we use the html parser to parse the url content and store it in a variable.
     page_content = BeautifulSoup(page_response.content, "html.parser")
     page_content.prettify    
+
+    #ARTICLE
+    article = page_content.find('div', {'class' : 'p-15'})
     
+    #HEADER
+    #Get Block Header is in
+    caption = page_content.find('div', {'class' : 'caption clearfix'})
     #Get Chapter
-    chapter = page_content.find('h2', {'class' : 'text-center'})
+    chapter = caption.find('h4', {'class' : ''})
+    text_file.write(str(chapter))
 
-    #In case header changes
-    if(chapter == None):
-        chapter = page_content.find('h3')
+    #Get Chapter From URL
+    #chapter = completeURL[63:len(completeURL)
+    #text_file.write('<h4>' + chapter + '</h4>')
 
-    text_file.write('<h3>' + chapter.get_text() + '</h3>')
-    print("Writing " + chapter.get_text())
-    
-    #Get Article
-    article = page_content.find('div', {'class' : 'entry-content'})
+    print("Writing " + str(chapter))
+
+    #No <p>
+    #text_file.write(str(article))
 
     #Find and print all text with tag p
     paragraphs = article.find_all('p')
@@ -48,32 +55,33 @@ while(completeURL != None):
         text_file.write(str(paragraphs[i]))
 
     #Find link to next chapter
-    nextURLHTML = page_content.find('a', {'class' : 'btn next_page'})
-    if(nextURLHTML != None):
-        nextURL = nextURLHTML.get('href')
-    else:
-        #No Chapters left... Break. :(
-        break
+    # nextURLHTML = page_content.find('a', {'class' : 'btn btn-link'})
+    # if(nextURLHTML != None):
+    #     nextURL = nextURLHTML.get('href')
+    # else:
+    #     #No Chapters left... Break. :(
+    #     break
+    
 
     # Not Necessary unless multiple buttons.
-    #partURLArr = page_content.find_all('a', {'class' : 'btn next_page'})
-    #for i in range(len(partURLArr)):
-    #    if(i == len(partURLArr) - 1):
-    #        partURL = partURLArr[i].get('href')
+    nextURLArr = page_content.find_all('a', {'class' : 'btn btn-link'})
+    for i in range(len(nextURLArr)):
+        if(i == len(nextURLArr) - 1):
+            nextURL = nextURLArr[i].get('href')
             
     #Add partURL to array for tracking
     if(nextURL in URLArray):
-        completeURL = None 
+        completeURL = None
     else:
         URLArray.append(nextURL)
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        # completeURL = "https://novelplanet.com" + nextURL    
+        completeURL = "https://www.wuxiaworld.com" + nextURL    
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
     text_file.write("\n\n")
-    
+
 #Close Text File
 text_file.close()
