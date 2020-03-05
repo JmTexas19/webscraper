@@ -37,7 +37,7 @@ while(completeURL != None):
     #Get Block Header is in
     caption = page_content.find('li', {'class' : 'active'}).getText().strip()
     #Get Chapter
-    chapter = "<h3>" + caption + "</h3?"
+    chapter = "<h3>" + caption + "</h3>"
     text_file.write(str(chapter))
 
     #Get Chapter From URL
