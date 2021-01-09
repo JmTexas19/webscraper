@@ -13,7 +13,7 @@ scraper = cfscrape.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://www.wuxiaworld.com/novel/the-second-coming-of-gluttony/scog-chapter-1'
+completeURL = 'https://justatranslatortranslations.com/lgs/lgs-chapter-1/'
 
 # Array for storing URL's
 URLArray = []
@@ -30,7 +30,7 @@ while(completeURL != None):
     page_content.prettify    
     
     #Get CHAPTER
-    chapter = page_content.find('div', {'class' : 'caption'}).find('h4', {'class' : ''})
+    chapter = page_content.find('h1', {'class' : 'entry-title'})
     text_file.write(str(chapter))
     print("Writing: " + str(chapter))
 
@@ -42,17 +42,15 @@ while(completeURL != None):
     #--
 
     # Get ARTICLE
-    article = page_content.find('div', {'id' : 'chapter-content'})
+    article = page_content.find('div', {'class' : 'entry-content'})
     
     # Scrape Text
     text_file.write(str(article))
 
     # Find link to next chapter
-    nextURL = page_content.find('li', {'class' : 'next'})
-    nextURLHTML = nextURL.find('a', {'class' : 'btn-link'})
-
-    if(nextURLHTML != None):
-        nextURL = nextURLHTML.get('href')
+    nextURL = page_content.find('a', text='[Next Chapter]')
+    if(nextURL != None):
+        nextURL = nextURL.get('href')
     else:
         #No Chapters left... Break. :(
         break
@@ -71,7 +69,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://wuxiaworld.com" + nextURL    
+        #completeURL = "https://wuxiaworld.com" + nextURL    
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
