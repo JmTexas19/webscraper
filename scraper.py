@@ -14,7 +14,7 @@ scraper = cfscrape.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://www.lightnovelworld.com/novel/dual-cultivation-lightnovel-09011258/chapter-1'
+completeURL = 'https://www.wuxiaworld.com/novel/the-grandmaster-strategist/tgs-volume-1-chapter-1'
 
 # Array for storing URL's
 URLArray = []
@@ -46,17 +46,19 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLE
-    article = page_content.find('div', {'id' : 'vung_doc'})
+    article = page_content.find('div', {'id' : 'chapter-content'})
 
     #Get CHAPTER
-    chapter = page_content.find('h2')
-    text_file.write(str(chapter))
-    print("Writing: " + str(chapter))
+    chapter = page_content.find('div', {'id' : 'chapter-outer'}).find('h4', {'class' : ''})
 
     # GET LINK
-    nextURL = page_content.find('a', {'class' : 'next'})
+    nextURL = page_content.find('li', {'class' : 'next'}).find('a', {'class' : 'btn'})
 
     ##################################################################################################
+
+    #Write Chapter
+    text_file.write(str(chapter))
+    print("Writing: " + str(chapter))
 
     #--[Optional] In case header changes
     #if(chapter == None):
@@ -89,7 +91,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://www.lightnovelworld.com" + nextURL  
+        completeURL = "https://www.wuxiaworld.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
