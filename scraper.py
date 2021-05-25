@@ -14,7 +14,7 @@ scraper = cfscrape.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://novelfull.com/martial-peak/chapter-1-the-servant-who-sweeps.html'
+completeURL = 'https://readnovelfull.com/supreme-magus/chapter-1-prologue.html'
 
 # Array for storing URL's
 URLArray = []
@@ -46,10 +46,10 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLE
-    article = page_content.find('div', {'id' : 'chapter-content'})
+    article = page_content.find('div', {'id' : 'chr-content'})
 
     #Get CHAPTER
-    chapter = page_content.find('span', {'class' : 'chapter-text'})
+    chapter = page_content.find('span', {'class' : 'chr-text'})
 
     # GET LINK
     nextURL = page_content.find('a', {'id' : 'next_chap'})
@@ -91,7 +91,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://novelfull.com" + nextURL  
+        completeURL = "https://readnovelfull.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
