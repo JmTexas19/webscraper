@@ -15,7 +15,7 @@ scraper = cloudscraper.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://novelgate.net/my-vampire-system6-97/chapter-47212.html'
+completeURL = 'https://novelfull.com/108-maidens-of-destiny/prologue.html'
 
 # Array for storing URL's
 URLArray = []
@@ -47,13 +47,13 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLE
-    article = page_content.find('div', {'id' : 'chapter-body'})
+    article = page_content.find('div', {'id' : 'chapter-content'})
 
     #Get CHAPTER
-    chapter = page_content.find('h1', {'class' : 'episode-name'})
+    chapter = page_content.find('a', {'class' : 'chapter-title'})
 
     # GET LINK
-    nextURL = page_content.find('div', {'id' : 'nav_chap_top'}).find_all('a')[1]
+    nextURL = page_content.find('a', {'id' : 'next_chap'})
 
     ##################################################################################################
 
@@ -92,7 +92,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://novelgate.net" + nextURL  
+        completeURL = "https://novelfull.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
