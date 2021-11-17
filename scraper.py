@@ -15,7 +15,7 @@ scraper = cloudscraper.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://novelfull.com/108-maidens-of-destiny/prologue.html'
+completeURL = 'https://www.lightnovelpub.com/novel/the-villain-wants-to-live/1209-chapter-0'
 
 # Array for storing URL's
 URLArray = []
@@ -47,13 +47,13 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLE
-    article = page_content.find('div', {'id' : 'chapter-content'})
+    article = page_content.find('div', {'id' : 'chapter-container'})
 
     #Get CHAPTER
-    chapter = page_content.find('a', {'class' : 'chapter-title'})
+    chapter = page_content.find('span', {'class' : 'chapter-title'})
 
     # GET LINK
-    nextURL = page_content.find('a', {'id' : 'next_chap'})
+    nextURL = page_content.find('a', {'class' : 'nextchap'})
 
     ##################################################################################################
 
@@ -92,7 +92,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        completeURL = "https://novelfull.com" + nextURL  
+        completeURL = "https://www.lightnovelpub.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
