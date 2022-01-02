@@ -5,15 +5,18 @@ Created on Mon Nov  5 20:37:33 2018
 @author: DazedFury
 """
 # Here, we're just importing both Beautiful Soup and the Requests library
+from typing import List
 from bs4 import BeautifulSoup
 import cfscrape
+import cloudscraper
+import time
 
 # returns a CloudflareScraper instance
-scraper = cfscrape.create_scraper()  
+scraper = cloudscraper.create_scraper()  
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://justatranslatortranslations.com/lgs/lgs-chapter-1/'
+completeURL = 'https://rainingtl.org/kidnapped-dragons-1/'
 
 # Array for storing URL's
 URLArray = []
@@ -28,11 +31,42 @@ while(completeURL != None):
     #we use the html parser to parse the url content and store it in a variable.
     page_content = BeautifulSoup(page_response.content, "html.parser")
     page_content.prettify    
+
+    #If delay is necessary
+    while(page_content.find('h1', text='Too Many Requests') is not None):
+        time.sleep(5) 
+        # this is the url that we've already determined is safe and legal to scrape from.
+        page_link = completeURL
+        
+        # here, we fetch the content from the url, using the requests library
+        page_response = scraper.get(page_link)
+        
+        #we use the html parser to parse the url content and store it in a variable.
+        page_content = BeautifulSoup(page_response.content, "html.parser")
+        page_content.prettify   
+
+    ##################################################################################################
     
+    #Get ARTICLEl
+    article = page_content.find('div', {'class' : 'nv-content-wrap'})
+
     #Get CHAPTER
-    chapter = page_content.find('h1', {'class' : 'entry-title'})
-    text_file.write(str(chapter))
-    print("Writing: " + str(chapter))
+    chapter = page_content.find('h3')
+
+    # GET LINK
+    nextURL = page_content.find_all('a')
+
+    #Multiple Links
+    for url in nextURL:
+        if(url.text == 'Next Chapter'):
+            nextURL = url
+            break
+    
+    ##################################################################################################
+
+    #Write Chapter
+    text_file.write('<h1>' + chapter.get_text() + '</h1>')
+    print("Writing: " + chapter.get_text())
 
     #--[Optional] In case header changes
     #if(chapter == None):
@@ -40,15 +74,11 @@ while(completeURL != None):
     #text_file.write('<h3>' + chapter.get_text() + '</h3>')
     #print("Writing " + chapter.get_text())
     #--
-
-    # Get ARTICLE
-    article = page_content.find('div', {'class' : 'entry-content'})
     
-    # Scrape Text
+    #Write Article
     text_file.write(str(article))
 
-    # Find link to next chapter
-    nextURL = page_content.find('a', text='[Next Chapter]')
+    #Next Link
     if(nextURL != None):
         nextURL = nextURL.get('href')
     else:
@@ -69,7 +99,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        #completeURL = "https://wuxiaworld.com" + nextURL    
+        #completeURL = "https://rainingtl.org" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
