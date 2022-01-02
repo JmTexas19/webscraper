@@ -16,7 +16,7 @@ scraper = cloudscraper.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://rainingtl.org/kidnapped-dragons-1/'
+completeURL = 'https://hostednovel.com/17321/novel/legend-of-the-great-sage/lgs-chapter-1'
 
 # Array for storing URL's
 URLArray = []
@@ -48,19 +48,21 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLEl
-    article = page_content.find('div', {'class' : 'nv-content-wrap'})
+    article = page_content.find('div', {'id' : 'chapter'})
 
     #Get CHAPTER
-    chapter = page_content.find('h3')
+    chapter = page_content.find('h1', {'class' : 'mb-4'})
 
     # GET LINK
     nextURL = page_content.find_all('a')
 
     #Multiple Links
     for url in nextURL:
-        if(url.text == 'Next Chapter'):
+        if('Next' in url.text):
             nextURL = url
             break
+        else:
+            nextURL = ''
     
     ##################################################################################################
 
