@@ -16,7 +16,7 @@ scraper = cloudscraper.create_scraper()
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://rainingtl.org/kidnapped-dragons-1/'
+completeURL = 'https://www.lightnovelpub.com/novel/little-tyrant-doesnt-want-to-meet-with-a-bad-end-22021155/975-chapter-1'
 
 # Array for storing URL's
 URLArray = []
@@ -48,19 +48,21 @@ while(completeURL != None):
     ##################################################################################################
     
     #Get ARTICLEl
-    article = page_content.find('div', {'class' : 'nv-content-wrap'})
+    article = page_content.find('div', {'id' : 'chapter-container'})
 
     #Get CHAPTER
-    chapter = page_content.find('h3')
+    chapter = page_content.find('span', {'class', 'chapter-title'})
 
     # GET LINK
     nextURL = page_content.find_all('a')
 
     #Multiple Links
     for url in nextURL:
-        if(url.text == 'Next Chapter'):
+        if(url.text == 'Next'):
             nextURL = url
             break
+
+    #Regex for LightNovelPub (?<=<strong><strong>).+?(?=<\/strong><\/strong>)
     
     ##################################################################################################
 
@@ -99,7 +101,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        #completeURL = "https://rainingtl.org" + nextURL  
+        completeURL = "https://www.lightnovelpub.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
