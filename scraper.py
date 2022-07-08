@@ -97,6 +97,8 @@ while(completeURL != None):
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
     text_file.write("\n\n")
+
+    #REGEX (<p><sub>.+?</sub></p>)
     
 #Close Text File
 text_file.close()
