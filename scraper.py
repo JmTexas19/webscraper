@@ -5,21 +5,36 @@ Created on Mon Nov  5 20:37:33 2018
 @author: DazedFury
 """
 # Here, we're just importing both Beautiful Soup and the Requests library
-from typing import List
-from bs4 import BeautifulSoup
-import cfscrape
-import cloudscraper
 import time
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import cloudscraper
 
-# returns a CloudflareScraper instance
-scraper = cloudscraper.create_scraper()  
+options = webdriver.ChromeOptions()
+options.add_argument(r"--user-data-dir=C:\\Users\\jmtex\\AppData\\Local\\Google\\Chrome\\User Data")
+options.add_argument("start-maximized")
+options.add_argument('--disable-blink-features=AutomationControlled')
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+driver = webdriver.Chrome(executable_path=r'chromedriver.exe', options=options)
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://rainingtl.org/kidnapped-dragons-1/'
+completeURL = 'https://www.lightnovelpub.com/novel/the-villain-wants-to-live-25060131/1209-chapter-173'
 
 # Array for storing URL's
 URLArray = []
+
+# Login (Optional)
+driver.get('https://www.lightnovelpub.com/account/logingoogle')
+
+scraper = cloudscraper.create_scraper()
+for cookie in driver.get_cookies():
+    c = {cookie['name']: cookie['value']}
+    scraper.cookies.update(c)
+
+driver.close()
 
 while(completeURL != None):
     # this is the url that we've already determined is safe and legal to scrape from.
@@ -30,37 +45,24 @@ while(completeURL != None):
     
     #we use the html parser to parse the url content and store it in a variable.
     page_content = BeautifulSoup(page_response.content, "html.parser")
-    page_content.prettify    
-
-    #If delay is necessary
-    while(page_content.find('h1', text='Too Many Requests') is not None):
-        time.sleep(5) 
-        # this is the url that we've already determined is safe and legal to scrape from.
-        page_link = completeURL
-        
-        # here, we fetch the content from the url, using the requests library
-        page_response = scraper.get(page_link)
-        
-        #we use the html parser to parse the url content and store it in a variable.
-        page_content = BeautifulSoup(page_response.content, "html.parser")
-        page_content.prettify   
+    page_content.prettify   
 
     ##################################################################################################
     
-    #Get ARTICLEl
-    article = page_content.find('div', {'class' : 'nv-content-wrap'})
+    #Get ARTICLE
+    article = page_content.find('div', {'id':'chapter-container'})
 
     #Get CHAPTER
-    chapter = page_content.find('h3')
+    chapter = page_content.find('span', {'class':'chapter-title'})
 
     # GET LINK
-    nextURL = page_content.find_all('a')
+    nextURL = page_content.find('a', {'class':'nextchap'})
 
     #Multiple Links
-    for url in nextURL:
-        if(url.text == 'Next Chapter'):
-            nextURL = url
-            break
+    # for url in nextURL:
+    #     if(url.text == 'Next Chapter'):
+    #         nextURL = url
+    #         break
     
     ##################################################################################################
 
@@ -99,7 +101,7 @@ while(completeURL != None):
         completeURL = nextURL
 
         #If nextURL is only half of what you need.
-        #completeURL = "https://rainingtl.org" + nextURL  
+        completeURL = "https://www.lightnovelpub.com" + nextURL  
     
     #FORMAT
     text_file.write("<p style=\"page-break-after: always;\">&nbsp;</p>")
