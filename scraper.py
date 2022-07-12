@@ -21,7 +21,7 @@ driver = webdriver.Chrome(executable_path=r'chromedriver.exe', options=options)
 
 #URL and textfile
 text_file = open("Output.html", "w", encoding='UTF-8')
-completeURL = 'https://www.lightnovelpub.com/novel/the-villain-wants-to-live-25060131/1209-chapter-1'
+completeURL = 'https://www.lightnovelpub.com/novel/the-regressed-demon-lord-is-kind-11072357/1234-chapter-1'
 
 # Array for storing URL's
 URLArray = []
